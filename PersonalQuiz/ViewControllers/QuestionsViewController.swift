@@ -8,7 +8,7 @@
 import UIKit
 
 class QuestionsViewController: UIViewController {
-
+    
     @IBOutlet var questionLabel: UILabel!
     @IBOutlet var questionProgressView: UIProgressView!
     
@@ -39,6 +39,11 @@ class QuestionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let resultVC = segue.destination as? ResultViewController else { return}
+        resultVC.answers = answersChosen
     }
     
     @IBAction func singleButtonAnswerPressed(_ sender: UIButton) {

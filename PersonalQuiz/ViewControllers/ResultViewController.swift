@@ -8,22 +8,43 @@
 import UIKit
 
 class ResultViewController: UIViewController {
+    @IBOutlet weak var resultAnimalLabel: UILabel!
+    @IBOutlet weak var descriptionAnimalLabel: UILabel!
     
-    // 1. Передать массив с ответами на экран с результатами
-    // 2. Определить наиболее часто встречающийся тип животного
-    // 3. Отобразить результаты в соответствии с этим животным
-    // 4. Избавиться от кнопки возврата назад на экране результатов
-
+    var answers: [Answer]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        navigationItem.hidesBackButton = true
+        
+        showResult()
     }
     
     @IBAction func doneButtonPressed(_ sender: UIBarButtonItem) {
         navigationController?.dismiss(animated: true)
     }
-    
-    deinit {
-        print("ResultViewController has been deallocated")
+}
+
+extension ResultViewController {
+    private func showResult() {
+        
+        let animalsTypes = answers.map {$0.animal}
+        var numbersOfAnswers: [Animal: Int] = [:]
+        
+        for animal in animalsTypes {
+            numbersOfAnswers[animal] = (numbersOfAnswers[animal] ?? 0) + 1
+        }
+        
+        let sortedNumbersOfAnswers = numbersOfAnswers.sorted { $0.value > $1.value }
+        guard let frequentAnimal = sortedNumbersOfAnswers.first?.key else { return }
+        
+        updateUI(with: frequentAnimal)
     }
+    
+    private func updateUI(with animal: Animal?) {
+        resultAnimalLabel.text = "Вы - \(animal?.rawValue ?? "💩")!"
+        descriptionAnimalLabel.text = animal?.definition ?? "Тебе сегодня не везёт"
+    }
+    
 }
